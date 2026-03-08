@@ -91,16 +91,19 @@ func Select(options []SelectOption, onInput func([]byte), opts ...dom.Option) *d
 
 // Checkbox creates a styled checkbox with label.
 func Checkbox(label string, onClick func([]byte)) *dom.Node {
+	opts := []dom.Option{
+		dom.Attr("type", "checkbox"),
+		CSS("width", "1rem", "height", "1rem", "cursor", "pointer",
+			"accent-color", ColorPrimary),
+	}
+	if onClick != nil {
+		opts = append(opts, dom.OnClick(onClick))
+	}
 	return dom.Label(
 		CSS("display", "flex", "align-items", "center", "gap", "0.5rem",
 			"cursor", "pointer", "color", ColorText, "font-size", "0.875rem"),
 		dom.Children(
-			dom.Input(
-				dom.Attr("type", "checkbox"),
-				CSS("width", "1rem", "height", "1rem", "cursor", "pointer",
-					"accent-color", ColorPrimary),
-				dom.OnClick(onClick),
-			),
+			dom.Input(opts...),
 			dom.Span(dom.Children(dom.Text(label))),
 		),
 	)
